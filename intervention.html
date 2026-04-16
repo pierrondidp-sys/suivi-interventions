@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Suivi d’intervention</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 16px;
+    }
+    .container {
+      max-width: 420px;
+      background: #ffffff;
+      margin: auto;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    h1 {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+    .lieu {
+      font-weight: bold;
+      margin-bottom: 16px;
+    }
+    label {
+      display: block;
+      margin-top: 14px;
+      margin-bottom: 6px;
+    }
+    select, input[type="time"], input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      font-size: 16px;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      background-color: #0078d4;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+  <h1>Suivi d’intervention</h1>
+
+  <div class="lieu" id="lieuAffiche">📍 Lieu : chargement…</div>
+
+  <form id="formulaire">
+    <label>Type d’intervention</label>
+    <select id="intervention" required>
+      <option value="">-- Choisir --</option>
+      <option value="1er passage">1er passage</option>
+      <option value="2ème passage">2ème passage</option>
+      <option value="3ème passage">3ème passage</option>
+      <option value="Autre">Autre</option>
+    </select>
+
+    <label>Heure de réalisation</label>
+    <input type="time" id="heure" required>
+
+    <label>Commentaire (optionnel)</label>
+    <input type="text" id="commentaire">
+
+    <button type="submit">📧 Ouvrir le mail</button>
+  </form>
+</div>
+
+<script>
+  const lieux = {
+"ILM_002": "AFORP",
+"ILM_003": "Collège de la Paix",
+"ILM_004": "Collège Georges Mandel",
+"ILM_005": "Collège Henri Matisse",
+"ILM_006": "Collège Victor Hugo",
+"ILM_007": "Ecole Arménienne Tarkmantchatz",
+"ILM_008": "Ecole Arménienne Tarkmantchatz",
+"ILM_009": "Ecole de Formation du Barreau",
+"ILM_010": "Ecole élémentaire Anatole France",
+"ILM_011": "Ecole élémentaire des Bords de Seine",
+"ILM_012": "Ecole élémentaire des Chartreux",
+"ILM_013": "Ecole élémentaire des Epinettes",
+"ILM_014": "Ecole élémentaire Françoise Giroud",
+"ILM_015": "Ecole élémentaire Jean de La Fontaine",
+"ILM_016": "Ecole élémentaire Jules Ferry",
+"ILM_017": "Ecole élémentaire Justin Oudin",
+"ILM_018": "Ecole élémentaire Le Colombier",
+"ILM_019": "Ecole élémentaire Les Ajoncs",
+"ILM_020": "Ecole élémentaire Louise Michel",
+"ILM_021": "Ecole élémentaire Paul Bert",
+"ILM_022": "Ecole élémentaire Robert Doisneau",
+"ILM_023": "Ecole élémentaire Saint Exupery",
+"ILM_024": "Ecole élémentaire Saint-Germain",
+"ILM_025": "Ecole élémentaire Voltaire",
+"ILM_026": "Ecole maternelle Anatole France",
+"ILM_027": "Ecole maternelle Chabanne",
+"ILM_028": "Ecole maternelle Claude Boujon",
+"ILM_029": "Ecole maternelle des Bords de Seine",
+"ILM_030": "Ecole maternelle des Chartreux",
+"ILM_031": "Ecole maternelle des Epinettes",
+"ILM_032": "Ecole maternelle Ernest Renan",
+"ILM_033": "Ecole maternelle Françoise Giroud",
+"ILM_034": "Ecole maternelle Jean de La Fontaine",
+"ILM_035": "Ecole maternelle Jules Ferry",
+"ILM_036": "Ecole maternelle Justin Oudin",
+"ILM_037": "Ecole maternelle Le Colombier",
+"ILM_038": "Ecole maternelle Le Petit Train Vert",
+"ILM_039": "Ecole maternelle Les Petits Ecoliers",
+"ILM_040": "Ecole maternelle Les Ponceaux",
+"ILM_041": "Ecole maternelle Les Varennes",
+"ILM_042": "Ecole maternelle Louise Michel",
+"ILM_043": "Ecole maternelle Marie Marvingt",
+"ILM_044": "Ecole maternelle Sophie Scholl",
+"ILM_045": "Ecole pré-maternelle et maternelle Smiles’n Kids",
+"ILM_046": "Ecole Sainte Clotilde",
+"ILM_047": "Ecole Sainte Clotilde",
+"ILM_048": "Faculté Libre de Droit",
+"ILM_049": "Groupe scolaire La Salle - Saint Nicolas",
+"ILM_050": "Hitema",
+"ILM_051": "INA Expert",
+"ILM_052": "Institut supérieur d'électronique de Paris ( ISEP)",
+"ILM_053": "ISIFA Groupe",
+"ILM_054": "Les Arcades",
+"ILM_055": "Lycée Ionesco",
+"ILM_056": "Esplanade des Constellations",
+"ILM_057": "Fort d'Issy",
+"ILM_058": "Miroir d'eau",
+"ILM_059": "Rue Charlot",
+"ILM_060": "Rue Claude Bernard",
+"ILM_061": "Rue d'Erevan",
+"ILM_062": "Rue de l'Égalité",
+"ILM_063": "Rue de la Défense",
+"ILM_064": "Rue de la Pastorale d'Issy",
+"ILM_065": "Rue Émile Duployé",
+"ILM_066": "Rue Honoré Fragonard",
+"ILM_067": "Rue Maximilien Robespierre",
+"ILM_068": "Allée du Panorama",
+"ILM_069": "Angle avenue de la Paix et rue Pierre Brossolette.",
+"ILM_070": "CAPGEMINI",
+"ILM_071": "Chemin des Vignes",
+"ILM_072": "Corentin Celton",
+"ILM_073": "Rue d'Erevan",
+"ILM_074": "Sentier de l'Asile",
+  };
+
+  const params = new URLSearchParams(window.location.search);
+  const codeLieu = params.get("lieu");
+
+  if (codeLieu) {
+    document.getElementById("lieuAffiche").innerText =
+      "📍 Lieu : " + codeLieu + " – " + (lieux[codeLieu] || "");
+  }
+
+  const maintenant = new Date();
+  document.getElementById("heure").value =
+    String(maintenant.getHours()).padStart(2,"0") + ":" +
+    String(maintenant.getMinutes()).padStart(2,"0");
+
+  document.getElementById("formulaire").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const mailto =
+      "mailto:didier.pierron@seineouest.fr" +
+      "?subject=" + encodeURIComponent("Intervention " + codeLieu) +
+      "&body=" + encodeURIComponent(
+        "Lieu : " + codeLieu + "\n" +
+        "Type : " + intervention.value + "\n" +
+        "Heure : " + heure.value + "\n" +
+        "Commentaire : " + commentaire.value
+      );
+
+    window.location.href = mailto;
+  });
+</script>
+</body>
+</html>
+``

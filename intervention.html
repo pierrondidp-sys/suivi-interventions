@@ -159,7 +159,7 @@
 
   if (codeLieu) {
     document.getElementById("lieuAffiche").innerText =
-      "📍 Lieu : " + codeLieu + " – " + (lieux[codeLieu] || "");
+      "📍 Lieu : " + (lieux[codeLieu] || "") + " (" + codeLieu + ")";
   }
 
   const maintenant = new Date();

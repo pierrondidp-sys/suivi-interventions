@@ -172,7 +172,9 @@
 
     const mailto =
       "mailto:didier.pierron@seineouest.fr" +
-      "?subject=" + encodeURIComponent("Intervention " + codeLieu) +
+      "?subject=" + encodeURIComponent(
+      "Intervention " + (lieux[codeLieu] || "") + " (" + codeLieu + ")"
+      ) +
       "&body=" + encodeURIComponent(
         "Lieu : " + (lieux[codeLieu] || "") + " (" + codeLieu + ")\n\n" +
         "Type : " + intervention.value + "\n" +
